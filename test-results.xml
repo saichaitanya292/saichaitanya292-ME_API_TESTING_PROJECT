@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="4" passed="4" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2024-12-22T16:04:05 IST" name="Suite1" finished-at="2024-12-22T16:04:21 IST" duration-ms="16006">
+    <groups>
+      <group name="API Tests">
+        <method signature="testCase_API_01.testUserRegistrationAndLogin()[pri:0, instance:qtriptest.APITests.testCase_API_01@51850751]" name="testUserRegistrationAndLogin" class="qtriptest.APITests.testCase_API_01"/>
+        <method signature="testCase_API_02.testSearchCityReturnsCorrectNumberOfResults()[pri:0, instance:qtriptest.APITests.testCase_API_02@3fc9dfc5]" name="testSearchCityReturnsCorrectNumberOfResults" class="qtriptest.APITests.testCase_API_02"/>
+        <method signature="testCase_API_03.testReservationProcess()[pri:0, instance:qtriptest.APITests.testCase_API_03@40258c2f]" name="testReservationProcess" class="qtriptest.APITests.testCase_API_03"/>
+        <method signature="testCase_API_04.testDuplicateUserRegistration()[pri:0, instance:qtriptest.APITests.testCase_API_04@2cac4385]" name="testDuplicateUserRegistration" class="qtriptest.APITests.testCase_API_04"/>
+      </group> <!-- API Tests -->
+    </groups>
+    <test started-at="2024-12-22T16:04:05 IST" name="Regression1" finished-at="2024-12-22T16:04:21 IST" duration-ms="16006">
+      <class name="qtriptest.APITests.testCase_API_01">
+        <test-method signature="testUserRegistrationAndLogin()[pri:0, instance:qtriptest.APITests.testCase_API_01@51850751]" started-at="2024-12-22T16:04:05 IST" name="testUserRegistrationAndLogin" finished-at="2024-12-22T16:04:11 IST" duration-ms="6349" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testUserRegistrationAndLogin -->
+      </class> <!-- qtriptest.APITests.testCase_API_01 -->
+      <class name="qtriptest.APITests.testCase_API_02">
+        <test-method signature="testSearchCityReturnsCorrectNumberOfResults()[pri:0, instance:qtriptest.APITests.testCase_API_02@3fc9dfc5]" started-at="2024-12-22T16:04:11 IST" name="testSearchCityReturnsCorrectNumberOfResults" finished-at="2024-12-22T16:04:13 IST" duration-ms="2247" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testSearchCityReturnsCorrectNumberOfResults -->
+      </class> <!-- qtriptest.APITests.testCase_API_02 -->
+      <class name="qtriptest.APITests.testCase_API_03">
+        <test-method signature="testReservationProcess()[pri:0, instance:qtriptest.APITests.testCase_API_03@40258c2f]" started-at="2024-12-22T16:04:13 IST" name="testReservationProcess" finished-at="2024-12-22T16:04:18 IST" duration-ms="4940" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testReservationProcess -->
+      </class> <!-- qtriptest.APITests.testCase_API_03 -->
+      <class name="qtriptest.APITests.testCase_API_04">
+        <test-method signature="testDuplicateUserRegistration()[pri:0, instance:qtriptest.APITests.testCase_API_04@2cac4385]" started-at="2024-12-22T16:04:18 IST" name="testDuplicateUserRegistration" finished-at="2024-12-22T16:04:21 IST" duration-ms="2367" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testDuplicateUserRegistration -->
+      </class> <!-- qtriptest.APITests.testCase_API_04 -->
+    </test> <!-- Regression1 -->
+  </suite> <!-- Suite1 -->
+</testng-results>

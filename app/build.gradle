@@ -39,6 +39,7 @@ dependencies {
 
 
 
+
     
 }
 
@@ -51,6 +52,7 @@ application {
 test {
     useTestNG() {
         useDefaultListeners = true // generates the test report
+          suites 'testng.xml'
     }
      afterSuite { desc, result ->
             if (!desc.parent) {
