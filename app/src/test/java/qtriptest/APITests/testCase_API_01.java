@@ -1,61 +1,117 @@
 package qtriptest.APITests;
+
 import io.restassured.http.ContentType;
-import io.restassured.path.json.JsonPath;
-import io.restassured.response.ResponseBody;
-import org.json.JSONObject;
+import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.*;
-import org.testng.asserts.SoftAssert;
-import io.restassured.http.Method;
-import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import io.restassured.RestAssured;
 import java.util.UUID;
+
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
-
 public class testCase_API_01 {
+    
+    // Constants
+    private static final String BASE_URI = "https://content-qtripdynamic-qa-backend.azurewebsites.net/api/v1";
+    private static final String REGISTER_ENDPOINT = "/register";
+    private static final String LOGIN_ENDPOINT = "/login";
+    private static final int EXPECTED_STATUS_CODE = 201;
+    private static final String TEST_PASSWORD = "s@gmail.com";
+    
+    private String testEmail;
+    
     static {
-        RestAssured.baseURI = "https://content-qtripdynamic-qa-backend.azurewebsites.net/api/v1"; // Replace with your actual base URL
+        RestAssured.baseURI = BASE_URI;
     }
 
-    // Test Case to register a user and then login
-    @Test(groups = {"API Tests"})
-    public void testUserRegistrationAndLogin() {
+    @BeforeMethod
+    public void setUp() {
+        // Generate unique email for each test
         String uniqueId = UUID.randomUUID().toString();
+        testEmail = "testuser" + uniqueId + "@gmail.com";
+    }
 
-        // Create the email address with a unique UUID
-        String email = "testuser" + uniqueId + "@gmail.com";
-        String requestBody = "{ \"email\": \"" + email + "\", \"password\": \"s@gmail.com\", \"confirmpassword\": \"s@gmail.com\" }";
+    @Test(groups = {"API Tests"}, description = "Register a new user with valid credentials")
+    public void testUserRegistration() {
+        String requestBody = createRegistrationRequest(testEmail, TEST_PASSWORD, TEST_PASSWORD);
 
-        // 1. Register a new user/home/crio-user/workspace/saichaitanya292-ME_API_TESTING_PROJECT/testng.xml
-        Response registerResponse = given()
+        Response response = given()
             .contentType(ContentType.JSON)
-            .body(requestBody)  // Replace with actual request body
+            .body(requestBody)
             .when()
-            .post("/register")  // Replace with the actual register API endpoint
+            .post(REGISTER_ENDPOINT)
             .then()
-            .statusCode(201)  // Check for status code 201
-            .extract().response();
+            .statusCode(EXPECTED_STATUS_CODE)
+            .body("success", equalTo(true))
+            .extract()
+            .response();
 
-    
+        Assert.assertNotNull(response.jsonPath().getString("data.userId"), 
+            "User ID should be returned in registration response");
+    }
 
-       String loginrequestBody = "{ \"email\": \"" + email + "\", \"password\": \"s@gmail.com\"}";
+    @Test(groups = {"API Tests"}, description = "Login with registered user credentials")
+    public void testUserLogin() {
+        // First register the user
+        String registrationBody = createRegistrationRequest(testEmail, TEST_PASSWORD, TEST_PASSWORD);
+        given()
+            .contentType(ContentType.JSON)
+            .body(registrationBody)
+            .when()
+            .post(REGISTER_ENDPOINT)
+            .then()
+            .statusCode(EXPECTED_STATUS_CODE);
+
+        // Then login
+        String loginBody = createLoginRequest(testEmail, TEST_PASSWORD);
         Response loginResponse = given()
             .contentType(ContentType.JSON)
-            .body(loginrequestBody)  
+            .body(loginBody)
             .when()
-            .post("/login")  // Replace with the actual login API endpoint
+            .post(LOGIN_ENDPOINT)
             .then()
-            .statusCode(201)  // Check for status code 201 (successful login)
-            .body("success", equalTo(true))  // Check if the success flag is true
-            .body("token", not(emptyString()))  // Check if the token is returned
-            .extract().response();
+            .statusCode(EXPECTED_STATUS_CODE)
+            .body("success", equalTo(true))
+            .body("token", not(emptyString()))
+            .extract()
+            .response();
 
-        // Optionally, you can print the login response for debugging
-        System.out.println("Login Response: " + loginResponse.asString());
+        String token = loginResponse.jsonPath().getString("token");
+        Assert.assertNotNull(token, "Authentication token should be returned");
+        System.out.println("Login successful. Token: " + token);
     }
-    
-   
+
+    @Test(groups = {"API Tests"}, description = "Verify login fails with incorrect password")
+    public void testLoginWithInvalidPassword() {
+        // Register with correct password
+        String registrationBody = createRegistrationRequest(testEmail, TEST_PASSWORD, TEST_PASSWORD);
+        given()
+            .contentType(ContentType.JSON)
+            .body(registrationBody)
+            .when()
+            .post(REGISTER_ENDPOINT)
+            .then()
+            .statusCode(EXPECTED_STATUS_CODE);
+
+        // Attempt login with wrong password
+        String loginBody = createLoginRequest(testEmail, "wrongpassword");
+        given()
+            .contentType(ContentType.JSON)
+            .body(loginBody)
+            .when()
+            .post(LOGIN_ENDPOINT)
+            .then()
+            .statusCode(401); // Unauthorized
+    }
+
+    // Helper methods
+    private String createRegistrationRequest(String email, String password, String confirmPassword) {
+        return "{ \"email\": \"" + email + "\", \"password\": \"" + password 
+            + "\", \"confirmpassword\": \"" + confirmPassword + "\" }";
+    }
+
+    private String createLoginRequest(String email, String password) {
+        return "{ \"email\": \"" + email + "\", \"password\": \"" + password + "\" }";
+    }
 }
